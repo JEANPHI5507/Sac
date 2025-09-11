@@ -6,12 +6,12 @@ let signatureData = null;
 
 // Données de l'entreprise
 const entrepriseData = {
-    nom: "Ici-store",
+    nom: "SAC Sécurité",
     specialite: "Automatismes de Portail",
-    adresse: "123 Avenue des Automatismes, 84200 Carpentras",
+    adresse: "21 route de lyon, 84000 Avignon",
     telephone: "04 90 XX XX XX",
-    email: "contact@ici-store.fr",
-    site: "www.ici-store.fr",
+    email: "contact@sarl-sac.fr",
+    site: "null",
     siret: "XXX XXX XXX 00001"
 };
 
