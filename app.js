@@ -1,4 +1,4 @@
-// Application SAV Ici-store - Version corrigée avec navigation simplifiée
+// Application SAV SAC Sécurité - Version corrigée avec navigation simplifiée
 
 // Variables globales
 let photos = [];
@@ -528,7 +528,7 @@ function createCoverPage(doc) {
     doc.setFontSize(32);
     doc.setTextColor(33, 128, 141);
     doc.setFont('helvetica', 'bold');
-    doc.text('Ici-store', 105, 50, { align: 'center' });
+    doc.text('SAC Sécurité', 105, 50, { align: 'center' });
     
     doc.setFontSize(16);
     doc.setTextColor(98, 108, 113);
