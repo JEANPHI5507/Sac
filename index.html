@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAV Automatisme Portail - Ici-store</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="app-header">
+            <h1>Rapport d'Intervention SAV</h1>
+            <p class="company">Ici-store - Automatismes de Portail</p>
+        </header>
+
+        <div class="progress-bar">
+            <div class="progress-step active" data-step="1">Identification</div>
+            <div class="progress-step" data-step="2">Client</div>
+            <div class="progress-step" data-step="3">Équipement</div>
+            <div class="progress-step" data-step="4">Intervention</div>
+            <div class="progress-step" data-step="5">Résultats</div>
+            <div class="progress-step" data-step="6">Signature</div>
+        </div>
+
+        <form id="intervention-form" class="intervention-form">
+            <!-- Section 1: Identification -->
+            <div class="form-section active" data-section="1">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Identification de l'Intervention</h2>
+                    </div>
+                    <div class="card__body">
+                        <div class="form-group">
+                            <label class="form-label" for="numero-intervention">Numéro d'intervention</label>
+                            <input type="text" id="numero-intervention" class="form-control" readonly>
+                        </div>
+                        <div class="flex gap-16">
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="date-intervention">Date d'intervention</label>
+                                <input type="date" id="date-intervention" class="form-control" required>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="heure-intervention">Heure d'intervention</label>
+                                <input type="time" id="heure-intervention" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="nom-technicien">Nom du technicien</label>
+                            <input type="text" id="nom-technicien" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="entreprise">Entreprise</label>
+                            <input type="text" id="entreprise" class="form-control" value="Ici-store" readonly>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Client -->
+            <div class="form-section" data-section="2">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Informations Client</h2>
+                    </div>
+                    <div class="card__body">
+                        <div class="form-group">
+                            <label class="form-label" for="nom-client">Nom/Raison sociale du client</label>
+                            <input type="text" id="nom-client" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="adresse-client">Adresse complète</label>
+                            <textarea id="adresse-client" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="flex gap-16">
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="contact-nom">Contact sur site (nom)</label>
+                                <input type="text" id="contact-nom" class="form-control" required>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="contact-telephone">Téléphone</label>
+                                <input type="tel" id="contact-telephone" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="email-client">Email du client</label>
+                            <input type="email" id="email-client" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Équipement -->
+            <div class="form-section" data-section="3">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Équipement</h2>
+                    </div>
+                    <div class="card__body">
+                        <div class="flex gap-16">
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="type-portail">Type de portail</label>
+                                <select id="type-portail" class="form-control" required>
+                                    <option value="">Sélectionner...</option>
+                                </select>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="materiau">Matériau</label>
+                                <select id="materiau" class="form-control" required>
+                                    <option value="">Sélectionner...</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="flex gap-16">
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="marque-motorisation">Marque de la motorisation</label>
+                                <select id="marque-motorisation" class="form-control" required>
+                                    <option value="">Sélectionner...</option>
+                                </select>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="modele-motorisation">Modèle de la motorisation</label>
+                                <input type="text" id="modele-motorisation" class="form-control">
+                            </div>
+                        </div>
+                        <div class="flex gap-16">
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="annee-installation">Année d'installation</label>
+                                <input type="number" id="annee-installation" class="form-control" min="1990" max="2030">
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="numero-serie">Numéro de série</label>
+                                <input type="text" id="numero-serie" class="form-control">
+                            </div>
+                        </div>
+                        
+                        <!-- Photos Section for Equipment -->
+                        <div class="photos-section">
+                            <div class="photos-header">
+                                <h4>Photos de l'équipement</h4>
+                                <button type="button" class="btn btn--secondary btn--sm photo-btn" data-section="equipment">
+                                    📷 Ajouter une photo
+                                </button>
+                            </div>
+                            <div class="photos-gallery" id="equipment-gallery">
+                                <!-- Photos will be added here dynamically -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Intervention -->
+            <div class="form-section" data-section="4">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Détails de l'Intervention</h2>
+                    </div>
+                    <div class="card__body">
+                        <div class="form-group">
+                            <label class="form-label" for="type-intervention">Type d'intervention</label>
+                            <select id="type-intervention" class="form-control" required>
+                                <option value="">Sélectionner...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="probleme-signale">Description du problème signalé</label>
+                            <textarea id="probleme-signale" class="form-control" rows="3" required></textarea>
+                        </div>
+                        
+                        <!-- Photos Before Intervention -->
+                        <div class="photos-section">
+                            <div class="photos-header">
+                                <h4>Photos avant intervention</h4>
+                                <button type="button" class="btn btn--secondary btn--sm photo-btn" data-section="before">
+                                    📷 Photo du problème
+                                </button>
+                            </div>
+                            <div class="photos-gallery" id="before-gallery">
+                                <!-- Photos will be added here dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="diagnostic">Diagnostic réalisé</label>
+                            <textarea id="diagnostic" class="form-control" rows="3" required></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="actions-effectuees">Actions effectuées (détaillées)</label>
+                            <textarea id="actions-effectuees" class="form-control" rows="4" required></textarea>
+                        </div>
+                        
+                        <!-- Photos During Intervention -->
+                        <div class="photos-section">
+                            <div class="photos-header">
+                                <h4>Photos pendant l'intervention</h4>
+                                <button type="button" class="btn btn--secondary btn--sm photo-btn" data-section="during">
+                                    📷 Photo des réparations
+                                </button>
+                            </div>
+                            <div class="photos-gallery" id="during-gallery">
+                                <!-- Photos will be added here dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="pieces-remplacees">Pièces remplacées/ajoutées avec références</label>
+                            <textarea id="pieces-remplacees" class="form-control" rows="3" placeholder="Ex: Télécommande ref. XXX, Cellules photoélectriques ref. YYY..."></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tests-securite">Tests de sécurité effectués</label>
+                            <textarea id="tests-securite" class="form-control" rows="2" required></textarea>
+                        </div>
+                        <div class="flex gap-16">
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="heure-debut">Heure de début</label>
+                                <input type="time" id="heure-debut" class="form-control" required>
+                            </div>
+                            <div class="form-group flex-1">
+                                <label class="form-label" for="heure-fin">Heure de fin</label>
+                                <input type="time" id="heure-fin" class="form-control" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="observations">Observations particulières</label>
+                            <textarea id="observations" class="form-control" rows="2"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 5: Résultats -->
+            <div class="form-section" data-section="5">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Résultats de l'Intervention</h2>
+                    </div>
+                    <div class="card__body">
+                        <div class="form-group">
+                            <label class="form-label" for="etat-fonctionnement">État de fonctionnement après intervention</label>
+                            <select id="etat-fonctionnement" class="form-control" required>
+                                <option value="">Sélectionner...</option>
+                                <option value="Excellent">Excellent</option>
+                                <option value="Bon">Bon</option>
+                                <option value="Satisfaisant">Satisfaisant</option>
+                                <option value="Défaillant">Défaillant</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Problème résolu</label>
+                            <div class="radio-group">
+                                <label><input type="radio" name="probleme-resolu" value="oui" required> Oui</label>
+                                <label><input type="radio" name="probleme-resolu" value="non" required> Non</label>
+                            </div>
+                        </div>
+                        
+                        <!-- Photos After Intervention -->
+                        <div class="photos-section">
+                            <div class="photos-header">
+                                <h4>Photos après intervention</h4>
+                                <button type="button" class="btn btn--secondary btn--sm photo-btn" data-section="after">
+                                    📷 Photo du résultat
+                                </button>
+                            </div>
+                            <div class="photos-gallery" id="after-gallery">
+                                <!-- Photos will be added here dynamically -->
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label" for="recommandations">Recommandations pour le client</label>
+                            <textarea id="recommandations" class="form-control" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="prochaine-maintenance">Prochaine maintenance prévue</label>
+                            <input type="date" id="prochaine-maintenance" class="form-control">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 6: Signature -->
+            <div class="form-section" data-section="6">
+                <div class="card">
+                    <div class="card__header">
+                        <h2>Signature Client</h2>
+                    </div>
+                    <div class="card__body">
+                        <div class="form-group">
+                            <label class="form-label" for="nom-signataire">Nom du signataire</label>
+                            <input type="text" id="nom-signataire" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Signature électronique</label>
+                            <div class="signature-container">
+                                <canvas id="signature-canvas" width="400" height="200"></canvas>
+                                <div class="signature-controls">
+                                    <button type="button" id="clear-signature" class="btn btn--secondary btn--sm">Effacer</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="date-signature">Date et heure de signature</label>
+                            <input type="datetime-local" id="date-signature" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="validation-technicien" required>
+                                Validation par le technicien
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="form-navigation">
+                <button type="button" id="prev-btn" class="btn btn--secondary" style="display: none;">Précédent</button>
+                <button type="button" id="next-btn" class="btn btn--primary">Suivant</button>
+                <button type="button" id="generate-report" class="btn btn--primary" style="display: none;">Générer le Rapport</button>
+            </div>
+        </form>
+
+        <!-- Modal de confirmation -->
+        <div id="report-modal" class="modal hidden">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3>Rapport généré avec succès</h3>
+                </div>
+                <div class="modal-body">
+                    <p>Le rapport d'intervention a été généré avec <span id="photo-count">0</span> photo(s). Que souhaitez-vous faire ?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="print-report" class="btn btn--primary">Imprimer</button>
+                    <button type="button" id="email-report" class="btn btn--secondary">Envoyer par Email</button>
+                    <button type="button" id="new-intervention" class="btn btn--outline">Nouvelle Intervention</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Photo Camera Modal -->
+        <div id="camera-modal" class="modal hidden">
+            <div class="modal-content camera-modal">
+                <div class="modal-header">
+                    <h3>Prendre une photo</h3>
+                    <button type="button" id="close-camera" class="btn btn--outline btn--sm">✕</button>
+                </div>
+                <div class="modal-body">
+                    <div class="camera-container">
+                        <video id="camera-video" autoplay playsinline></video>
+                        <canvas id="camera-canvas" style="display: none;"></canvas>
+                        <div id="photo-preview" class="photo-preview hidden">
+                            <img id="preview-image" alt="Photo preview">
+                        </div>
+                    </div>
+                    <div class="camera-controls">
+                        <button type="button" id="switch-camera" class="btn btn--secondary btn--sm">🔄 Changer caméra</button>
+                        <button type="button" id="capture-photo" class="btn btn--primary">📷 Capturer</button>
+                        <button type="button" id="retake-photo" class="btn btn--secondary hidden">🔄 Reprendre</button>
+                    </div>
+                    <div class="photo-caption hidden">
+                        <label class="form-label" for="photo-caption-input">Légende de la photo</label>
+                        <input type="text" id="photo-caption-input" class="form-control" placeholder="Décrivez la photo...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" id="save-photo" class="btn btn--primary hidden">Enregistrer la photo</button>
+                    <button type="button" id="cancel-photo" class="btn btn--secondary">Annuler</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- File input fallback -->
+        <input type="file" id="file-input" accept="image/*" capture="environment" style="display: none;">
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
