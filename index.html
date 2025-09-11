@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAV Ici-store - Rapport d'Intervention</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- En-tête -->
+        <header class="header">
+            <div class="header-content">
+                <div class="company-info">
+                    <h1>Ici-store</h1>
+                    <p>Automatismes de Portail</p>
+                </div>
+                <div class="contact-info">
+                    <p>04 90 XX XX XX | contact@ici-store.fr</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="general">Informations générales</button>
+            <button class="tab-btn" data-tab="equipment">Équipement</button>
+            <button class="tab-btn" data-tab="intervention">Intervention</button>
+            <button class="tab-btn" data-tab="photos">Photos</button>
+            <button class="tab-btn" data-tab="signature">Signature</button>
+            <button class="tab-btn" data-tab="rapport">Rapport PDF</button>
+        </nav>
+
+        <!-- Contenu des onglets -->
+        <main class="main-content">
+            <!-- Onglet Informations générales -->
+            <section id="general" class="tab-content active">
+                <div class="card">
+                    <div class="card__body">
+                        <h2>Informations Générales</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="numero-intervention">Numéro d'intervention *</label>
+                                <input type="text" id="numero-intervention" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="date-intervention">Date d'intervention *</label>
+                                <input type="datetime-local" id="date-intervention" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="technicien">Nom du technicien *</label>
+                                <input type="text" id="technicien" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="client-nom">Nom du client *</label>
+                                <input type="text" id="client-nom" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="client-adresse">Adresse du client *</label>
+                                <textarea id="client-adresse" class="form-control" rows="3" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="client-contact">Contact client</label>
+                                <input type="tel" id="client-contact" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Onglet Équipement -->
+            <section id="equipment" class="tab-content">
+                <div class="card">
+                    <div class="card__body">
+                        <h2>Équipement Concerné</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="type-portail">Type de portail *</label>
+                                <select id="type-portail" class="form-control" required>
+                                    <option value="">Sélectionner...</option>
+                                    <option value="Portail battant">Portail battant</option>
+                                    <option value="Portail coulissant">Portail coulissant</option>
+                                    <option value="Portail basculant">Portail basculant</option>
+                                    <option value="Barrière levante">Barrière levante</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="materiau">Matériau</label>
+                                <select id="materiau" class="form-control">
+                                    <option value="">Sélectionner...</option>
+                                    <option value="Aluminium">Aluminium</option>
+                                    <option value="PVC">PVC</option>
+                                    <option value="Fer">Fer</option>
+                                    <option value="Bois">Bois</option>
+                                    <option value="Acier">Acier</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="marque-motorisation">Marque motorisation *</label>
+                                <select id="marque-motorisation" class="form-control" required>
+                                    <option value="">Sélectionner...</option>
+                                    <option value="Somfy">Somfy</option>
+                                    <option value="Dooya">Dooya</option>
+                                    <option value="FAAC">FAAC</option>
+                                    <option value="BFT">BFT</option>
+                                    <option value="NICE">NICE</option>
+                                    <option value="CAME">CAME</option>
+                                    <option value="CARDIN">CARDIN</option>
+                                    <option value="FADINI">FADINI</option>
+                                    <option value="ROGER">ROGER</option>
+                                    <option value="V2">V2</option>
+                                    <option value="DITEC">DITEC</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="modele">Modèle</label>
+                                <input type="text" id="modele" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="annee">Année d'installation</label>
+                                <input type="number" id="annee" class="form-control" min="1990" max="2025">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Onglet Intervention -->
+            <section id="intervention" class="tab-content">
+                <div class="card">
+                    <div class="card__body">
+                        <h2>Intervention Réalisée</h2>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label" for="type-intervention">Type d'intervention *</label>
+                                <select id="type-intervention" class="form-control" required>
+                                    <option value="">Sélectionner...</option>
+                                    <option value="Dépannage urgence">Dépannage urgence</option>
+                                    <option value="Maintenance préventive">Maintenance préventive</option>
+                                    <option value="Installation">Installation</option>
+                                    <option value="Réglage/Paramétrage">Réglage/Paramétrage</option>
+                                    <option value="Remplacement pièce">Remplacement pièce</option>
+                                    <option value="Mise aux normes">Mise aux normes</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="probleme">Description du problème *</label>
+                                <textarea id="probleme" class="form-control" rows="4" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="actions">Actions effectuées *</label>
+                                <textarea id="actions" class="form-control" rows="5" required></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="pieces-remplacees">Pièces remplacées</label>
+                                <textarea id="pieces-remplacees" class="form-control" rows="3" placeholder="Indiquer les références des pièces..."></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="temps-passe">Temps passé (minutes)</label>
+                                <input type="number" id="temps-passe" class="form-control" min="0">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label" for="recommandations">Recommandations</label>
+                                <textarea id="recommandations" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Onglet Photos -->
+            <section id="photos" class="tab-content">
+                <div class="card">
+                    <div class="card__body">
+                        <h2>Documentation Photographique</h2>
+                        <div class="photo-section">
+                            <div class="form-group">
+                                <label class="form-label" for="type-photo">Type de photo</label>
+                                <select id="type-photo" class="form-control">
+                                    <option value="">Sélectionner...</option>
+                                    <option value="État initial - Problème constaté">État initial - Problème constaté</option>
+                                    <option value="Pièce défectueuse">Pièce défectueuse</option>
+                                    <option value="Pièce de rechange">Pièce de rechange</option>
+                                    <option value="Étape de réparation">Étape de réparation</option>
+                                    <option value="Test de fonctionnement">Test de fonctionnement</option>
+                                    <option value="État final - Intervention terminée">État final - Intervention terminée</option>
+                                    <option value="Plaque signalétique">Plaque signalétique</option>
+                                    <option value="Documentation technique">Documentation technique</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <input type="file" id="photo-input" class="form-control" accept="image/*" multiple>
+                                <button type="button" class="btn btn--primary" onclick="addPhotos()">Ajouter Photos</button>
+                            </div>
+                            <div id="photos-container" class="photos-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Onglet Signature -->
+            <section id="signature" class="tab-content">
+                <div class="card">
+                    <div class="card__body">
+                        <h2>Signature du Client</h2>
+                        <div class="signature-section">
+                            <p class="signature-info">Le client certifie avoir reçu l'intervention dans les conditions décrites.</p>
+                            <div class="signature-container">
+                                <canvas id="signature-canvas" width="400" height="200"></canvas>
+                            </div>
+                            <div class="signature-actions">
+                                <button type="button" class="btn btn--secondary" onclick="clearSignature()">Effacer</button>
+                                <button type="button" class="btn btn--primary" onclick="saveSignature()">Enregistrer Signature</button>
+                            </div>
+                            <div id="signature-saved" class="signature-saved"></div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Onglet Rapport PDF -->
+            <section id="rapport" class="tab-content">
+                <div class="card">
+                    <div class="card__body">
+                        <h2>Génération du Rapport PDF</h2>
+                        <div class="rapport-section">
+                            <div class="rapport-info">
+                                <p>Générez un rapport d'intervention professionnel au format PDF.</p>
+                                <div class="rapport-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Photos ajoutées:</span>
+                                        <span id="photos-count" class="stat-value">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Signature:</span>
+                                        <span id="signature-status" class="stat-value">Non signée</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="rapport-actions">
+                                <button type="button" class="btn btn--outline" onclick="previewPDF()">Aperçu PDF</button>
+                                <button type="button" class="btn btn--primary" onclick="generatePDF()">Générer Rapport PDF</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal Aperçu PDF -->
+    <div id="pdf-preview-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aperçu du Rapport PDF</h3>
+                <button type="button" class="btn-close" onclick="closePDFPreview()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="pdf-preview-container"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn--secondary" onclick="closePDFPreview()">Fermer</button>
+                <button type="button" class="btn btn--primary" onclick="downloadFromPreview()">Télécharger PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
