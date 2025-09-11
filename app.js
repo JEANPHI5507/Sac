@@ -567,7 +567,7 @@ function addPageHeader(doc, y) {
     doc.setFontSize(12);
     doc.setTextColor(33, 128, 141);
     doc.setFont('helvetica', 'bold');
-    doc.text('Ici-store', 20, y);
+    doc.text('SAC Sécurité', 20, y);
     
     doc.setFontSize(8);
     doc.setTextColor(98, 108, 113);
