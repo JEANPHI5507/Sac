@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SAV Ici-store - Gestion Avancée</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.31/jspdf.plugin.autotable.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <!-- En-tête principal -->
+        <header class="header">
+            <div class="header-content">
+                <div class="company-info">
+                    <h1>Ici-store</h1>
+                    <p>Automatismes de Portail - SAV Avancé</p>
+                </div>
+                <div class="header-stats">
+                    <div class="stat-item">
+                        <span class="stat-value" id="total-interventions">0</span>
+                        <span class="stat-label">Interventions</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-value" id="brouillons-count">0</span>
+                        <span class="stat-label">Brouillons</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Navigation principale -->
+        <nav class="nav-tabs">
+            <button class="tab-btn active" data-tab="dashboard">Tableau de bord</button>
+            <button class="tab-btn" data-tab="nouvelle-intervention">Nouvelle intervention</button>
+            <button class="tab-btn" data-tab="historique">Historique</button>
+            <button class="tab-btn" data-tab="parametres">Paramètres</button>
+        </nav>
+
+        <!-- Contenu principal -->
+        <main class="main-content">
+            <!-- Tableau de bord -->
+            <section id="dashboard" class="tab-content active">
+                <div class="dashboard-grid">
+                    <!-- Actions rapides -->
+                    <div class="card quick-actions">
+                        <div class="card__body">
+                            <h2>Actions Rapides</h2>
+                            <div class="action-buttons">
+                                <button class="btn btn--primary btn-large" onclick="nouvelleIntervention()">
+                                    <span class="btn-icon">➕</span>
+                                    Nouvelle Intervention
+                                </button>
+                                <button class="btn btn--secondary btn-large" onclick="reprendreBrouillon()" id="reprendre-btn" disabled>
+                                    <span class="btn-icon">📝</span>
+                                    Reprendre Brouillon
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Statistiques -->
+                    <div class="card stats-card">
+                        <div class="card__body">
+                            <h2>Activité Récente</h2>
+                            <div class="stats-grid">
+                                <div class="stat-box">
+                                    <div class="stat-number" id="stat-semaine">0</div>
+                                    <div class="stat-text">Cette semaine</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-number" id="stat-mois">0</div>
+                                    <div class="stat-text">Ce mois</div>
+                                </div>
+                                <div class="stat-box">
+                                    <div class="stat-number" id="stat-urgence">0</div>
+                                    <div class="stat-text">Urgences</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Interventions récentes -->
+                    <div class="card recent-interventions">
+                        <div class="card__body">
+                            <h2>Interventions Récentes</h2>
+                            <div id="recent-list" class="recent-list">
+                                <div class="empty-state">
+                                    <p>Aucune intervention récente</p>
+                                    <button class="btn btn--outline" onclick="nouvelleIntervention()">
+                                        Créer la première intervention
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Nouvelle intervention -->
+            <section id="nouvelle-intervention" class="tab-content">
+                <!-- Barre de progression et sauvegarde -->
+                <div class="intervention-header">
+                    <div class="progress-info">
+                        <h2>Nouvelle Intervention</h2>
+                        <div class="auto-save-status">
+                            <span class="save-indicator" id="save-indicator">
+                                <span class="save-dot"></span>
+                                Sauvegardé automatiquement
+                            </span>
+                        </div>
+                    </div>
+                    <div class="intervention-actions">
+                        <button class="btn btn--outline" onclick="reinitialiserFormulaire()">Réinitialiser</button>
+                        <button class="btn btn--secondary" onclick="sauvegarderBrouillon()">Sauvegarder brouillon</button>
+                        <button class="btn btn--primary" onclick="terminerIntervention()">Terminer intervention</button>
+                    </div>
+                </div>
+
+                <!-- Navigation secondaire pour les étapes -->
+                <div class="sub-nav">
+                    <button class="sub-tab-btn active" data-subtab="general">Informations générales</button>
+                    <button class="sub-tab-btn" data-subtab="equipment">Équipement</button>
+                    <button class="sub-tab-btn" data-subtab="intervention">Intervention</button>
+                    <button class="sub-tab-btn" data-subtab="photos">Photos</button>
+                    <button class="sub-tab-btn" data-subtab="signature">Signature</button>
+                    <button class="sub-tab-btn" data-subtab="rapport">Génération PDF</button>
+                </div>
+
+                <!-- Contenu des sous-onglets -->
+                <div class="sub-content">
+                    <!-- Informations générales -->
+                    <div id="general" class="sub-tab-content active">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Informations Générales</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label" for="numero-intervention">Numéro d'intervention *</label>
+                                        <input type="text" id="numero-intervention" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="date-intervention">Date d'intervention *</label>
+                                        <input type="datetime-local" id="date-intervention" class="form-control" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="technicien">Nom du technicien *</label>
+                                        <input type="text" id="technicien" class="form-control" required list="techniciens-datalist">
+                                        <datalist id="techniciens-datalist"></datalist>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="client-nom">Nom du client *</label>
+                                        <input type="text" id="client-nom" class="form-control" required list="clients-datalist">
+                                        <datalist id="clients-datalist"></datalist>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="client-adresse">Adresse du client *</label>
+                                        <textarea id="client-adresse" class="form-control" rows="3" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="client-contact">Contact client</label>
+                                        <input type="tel" id="client-contact" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Équipement -->
+                    <div id="equipment" class="sub-tab-content">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Équipement Concerné</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label" for="type-portail">Type de portail *</label>
+                                        <select id="type-portail" class="form-control" required>
+                                            <option value="">Sélectionner...</option>
+                                            <option value="Portail battant">Portail battant</option>
+                                            <option value="Portail coulissant">Portail coulissant</option>
+                                            <option value="Portail basculant">Portail basculant</option>
+                                            <option value="Barrière levante">Barrière levante</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="materiau">Matériau</label>
+                                        <select id="materiau" class="form-control">
+                                            <option value="">Sélectionner...</option>
+                                            <option value="Aluminium">Aluminium</option>
+                                            <option value="PVC">PVC</option>
+                                            <option value="Fer">Fer</option>
+                                            <option value="Bois">Bois</option>
+                                            <option value="Acier">Acier</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="marque-motorisation">Marque motorisation *</label>
+                                        <select id="marque-motorisation" class="form-control" required>
+                                            <option value="">Sélectionner...</option>
+                                            <option value="Somfy">Somfy</option>
+                                            <option value="Dooya">Dooya</option>
+                                            <option value="FAAC">FAAC</option>
+                                            <option value="BFT">BFT</option>
+                                            <option value="NICE">NICE</option>
+                                            <option value="CAME">CAME</option>
+                                            <option value="CARDIN">CARDIN</option>
+                                            <option value="FADINI">FADINI</option>
+                                            <option value="ROGER">ROGER</option>
+                                            <option value="V2">V2</option>
+                                            <option value="DITEC">DITEC</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="modele">Modèle</label>
+                                        <input type="text" id="modele" class="form-control" list="modeles-datalist">
+                                        <datalist id="modeles-datalist"></datalist>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="annee">Année d'installation</label>
+                                        <input type="number" id="annee" class="form-control" min="1990" max="2025">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Intervention -->
+                    <div id="intervention" class="sub-tab-content">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Détails de l'Intervention</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label" for="type-intervention">Type d'intervention *</label>
+                                        <select id="type-intervention" class="form-control" required>
+                                            <option value="">Sélectionner...</option>
+                                            <option value="Dépannage urgence">Dépannage urgence</option>
+                                            <option value="Maintenance préventive">Maintenance préventive</option>
+                                            <option value="Installation">Installation</option>
+                                            <option value="Réglage/Paramétrage">Réglage/Paramétrage</option>
+                                            <option value="Remplacement pièce">Remplacement pièce</option>
+                                            <option value="Mise aux normes">Mise aux normes</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="probleme">Description du problème *</label>
+                                        <textarea id="probleme" class="form-control" rows="4" required list="pannes-datalist"></textarea>
+                                        <datalist id="pannes-datalist"></datalist>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="actions">Actions effectuées *</label>
+                                        <textarea id="actions" class="form-control" rows="5" required></textarea>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="pieces-remplacees">Pièces remplacées</label>
+                                        <textarea id="pieces-remplacees" class="form-control" rows="3" list="pieces-datalist"></textarea>
+                                        <datalist id="pieces-datalist"></datalist>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="temps-passe">Temps passé (minutes)</label>
+                                        <input type="number" id="temps-passe" class="form-control" min="0">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label" for="recommandations">Recommandations</label>
+                                        <textarea id="recommandations" class="form-control" rows="3"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Photos -->
+                    <div id="photos" class="sub-tab-content">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Documentation Photographique</h3>
+                                <div class="photo-section">
+                                    <div class="form-group">
+                                        <label class="form-label" for="type-photo">Type de photo</label>
+                                        <select id="type-photo" class="form-control">
+                                            <option value="État initial">État initial - Problème constaté</option>
+                                            <option value="Pièce défectueuse">Pièce défectueuse</option>
+                                            <option value="Pièce de rechange">Pièce de rechange</option>
+                                            <option value="Étape de réparation">Étape de réparation</option>
+                                            <option value="Test de fonctionnement">Test de fonctionnement</option>
+                                            <option value="État final">État final - Intervention terminée</option>
+                                            <option value="Plaque signalétique">Plaque signalétique</option>
+                                            <option value="Documentation technique">Documentation technique</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="file" id="photo-input" class="form-control" accept="image/*" multiple>
+                                        <button type="button" class="btn btn--primary" onclick="addPhotos()">Ajouter Photos</button>
+                                    </div>
+                                    <div id="photos-container" class="photos-grid"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Signature -->
+                    <div id="signature" class="sub-tab-content">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Signature du Client</h3>
+                                <div class="signature-section">
+                                    <p class="signature-info">Le client certifie avoir reçu l'intervention dans les conditions décrites.</p>
+                                    <div class="signature-container">
+                                        <canvas id="signature-canvas" width="400" height="200"></canvas>
+                                    </div>
+                                    <div class="signature-actions">
+                                        <button type="button" class="btn btn--secondary" onclick="clearSignature()">Effacer</button>
+                                        <button type="button" class="btn btn--primary" onclick="saveSignature()">Enregistrer Signature</button>
+                                    </div>
+                                    <div id="signature-saved" class="signature-saved"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Génération PDF -->
+                    <div id="rapport" class="sub-tab-content">
+                        <div class="card">
+                            <div class="card__body">
+                                <h3>Génération du Rapport PDF</h3>
+                                <div class="rapport-section">
+                                    <div class="rapport-info">
+                                        <p>Générez un rapport d'intervention professionnel au format PDF.</p>
+                                        <div class="rapport-stats">
+                                            <div class="stat-item">
+                                                <span class="stat-label">Photos ajoutées:</span>
+                                                <span id="photos-count" class="stat-value">0</span>
+                                            </div>
+                                            <div class="stat-item">
+                                                <span class="stat-label">Signature:</span>
+                                                <span id="signature-status" class="stat-value">Non signée</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="rapport-actions">
+                                        <button type="button" class="btn btn--outline" onclick="previewPDF()">Aperçu PDF</button>
+                                        <button type="button" class="btn btn--primary" onclick="generatePDF()">Générer Rapport PDF</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Historique -->
+            <section id="historique" class="tab-content">
+                <div class="card">
+                    <div class="card__body">
+                        <div class="historique-header">
+                            <h2>Historique des Interventions</h2>
+                            <div class="search-filters">
+                                <input type="search" id="search-interventions" class="form-control" placeholder="Rechercher par client, numéro...">
+                                <select id="filter-statut" class="form-control">
+                                    <option value="">Tous les statuts</option>
+                                    <option value="brouillon">Brouillons</option>
+                                    <option value="termine">Terminées</option>
+                                </select>
+                                <select id="filter-type" class="form-control">
+                                    <option value="">Tous les types</option>
+                                    <option value="Dépannage urgence">Dépannage urgence</option>
+                                    <option value="Maintenance préventive">Maintenance préventive</option>
+                                    <option value="Installation">Installation</option>
+                                </select>
+                                <button class="btn btn--outline" onclick="exporterHistorique()">Exporter</button>
+                            </div>
+                        </div>
+                        <div id="interventions-table" class="interventions-table">
+                            <div class="empty-state">
+                                <h3>Aucune intervention trouvée</h3>
+                                <p>Commencez par créer une nouvelle intervention</p>
+                                <button class="btn btn--primary" onclick="nouvelleIntervention()">Créer une intervention</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Paramètres -->
+            <section id="parametres" class="tab-content">
+                <div class="parametres-grid">
+                    <!-- Profil entreprise -->
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Profil Entreprise</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label" for="param-nom">Nom de l'entreprise</label>
+                                    <input type="text" id="param-nom" class="form-control" value="Ici-store">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="param-specialite">Spécialité</label>
+                                    <input type="text" id="param-specialite" class="form-control" value="Automatismes de Portail">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="param-adresse">Adresse</label>
+                                    <textarea id="param-adresse" class="form-control" rows="3">123 Avenue des Automatismes, 84200 Carpentras</textarea>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="param-telephone">Téléphone</label>
+                                    <input type="tel" id="param-telephone" class="form-control" value="04 90 XX XX XX">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="param-email">Email</label>
+                                    <input type="email" id="param-email" class="form-control" value="contact@ici-store.fr">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="param-siret">SIRET</label>
+                                    <input type="text" id="param-siret" class="form-control" value="XXX XXX XXX 00001">
+                                </div>
+                            </div>
+                            <div class="param-actions">
+                                <button class="btn btn--primary" onclick="sauvegarderParametres()">Sauvegarder</button>
+                                <button class="btn btn--outline" onclick="reinitialiserParametres()">Réinitialiser</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Préférences -->
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Préférences</h3>
+                            <div class="preferences-grid">
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <input type="checkbox" id="auto-save-enabled" checked>
+                                        Sauvegarde automatique
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">
+                                        <input type="checkbox" id="notifications-enabled" checked>
+                                        Notifications
+                                    </label>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="auto-save-interval">Intervalle de sauvegarde (secondes)</label>
+                                    <input type="number" id="auto-save-interval" class="form-control" value="30" min="10" max="300">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label" for="default-technicien">Technicien par défaut</label>
+                                    <input type="text" id="default-technicien" class="form-control" placeholder="Nom du technicien">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Données -->
+                    <div class="card">
+                        <div class="card__body">
+                            <h3>Gestion des Données</h3>
+                            <div class="data-management">
+                                <div class="data-stats">
+                                    <div class="stat-item">
+                                        <span class="stat-label">Interventions stockées:</span>
+                                        <span class="stat-value" id="data-interventions">0</span>
+                                    </div>
+                                    <div class="stat-item">
+                                        <span class="stat-label">Espace utilisé:</span>
+                                        <span class="stat-value" id="data-size">0 KB</span>
+                                    </div>
+                                </div>
+                                <div class="data-actions">
+                                    <button class="btn btn--outline" onclick="exporterToutesLesDonnees()">Exporter toutes les données</button>
+                                    <button class="btn btn--outline" onclick="importerDonnees()">Importer des données</button>
+                                    <button class="btn btn--secondary" onclick="viderCache()">Vider le cache</button>
+                                </div>
+                                <input type="file" id="import-file" accept=".json" class="hidden">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    
+    <!-- Modal Aperçu PDF -->
+    <div id="pdf-preview-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Aperçu du Rapport PDF</h3>
+                <button type="button" class="btn-close" onclick="closePDFPreview()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="pdf-preview-container"></div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn--secondary" onclick="closePDFPreview()">Fermer</button>
+                <button type="button" class="btn btn--primary" onclick="downloadFromPreview()">Télécharger PDF</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Confirmation -->
+    <div id="confirmation-modal" class="modal hidden">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h3 id="confirm-title">Confirmation</h3>
+                <button type="button" class="btn-close" onclick="closeConfirmModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="confirm-message"></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn--secondary" onclick="closeConfirmModal()">Annuler</button>
+                <button type="button" class="btn btn--primary" id="confirm-ok">Confirmer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notifications -->
+    <div id="notifications-container" class="notifications-container"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
