@@ -1,4 +1,4 @@
-// Application SAV Ici-store - Version Avancée avec Mémoire Complète - CORRIGÉE
+// Application SAV SAC Sécurité - Version Avancée avec Mémoire Complète - CORRIGÉE
 
 // ================================
 // VARIABLES GLOBALES ET DONNÉES
@@ -6,12 +6,12 @@
 
 // Données de l'entreprise
 const entrepriseData = {
-    nom: "Ici-store",
+    nom: "SAC Sécurité",
     specialite: "Automatismes de Portail",
     adresse: "123 Avenue des Automatismes, 84200 Carpentras",
     telephone: "04 90 XX XX XX",
-    email: "contact@ici-store.fr",
-    site: "www.ici-store.fr",
+    email: "contact@xxxxxxxx.fr",
+    site: "www.sac.fr",
     siret: "XXX XXX XXX 00001"
 };
 
@@ -1389,7 +1389,7 @@ function createCoverPage(doc) {
     doc.setFontSize(32);
     doc.setTextColor(33, 128, 141);
     doc.setFont('helvetica', 'bold');
-    doc.text('Ici-store', 105, 50, { align: 'center' });
+    doc.text('SAC Sécurité', 105, 50, { align: 'center' });
     
     doc.setFontSize(16);
     doc.setTextColor(98, 108, 113);
@@ -1428,7 +1428,7 @@ function addPageHeader(doc, y) {
     doc.setFontSize(12);
     doc.setTextColor(33, 128, 141);
     doc.setFont('helvetica', 'bold');
-    doc.text('Ici-store', 20, y);
+    doc.text('SAC Sécurité', 20, y);
     
     doc.setFontSize(8);
     doc.setTextColor(98, 108, 113);
