@@ -2169,6 +2169,173 @@ function validateAllFields() {
 }
 
 // ================================
+// GÉNÉRATION PDF AVEC TVA
+// ================================
+function generatePDF() {
+    if (!currentIntervention) {
+        showNotification('Aucune intervention en cours', 'warning');
+        return;
+    }
+
+    // Collecter toutes les données y compris TVA
+    collectFormData();
+
+    showNotification('Génération du PDF en cours...', 'info');
+
+    try {
+        // Créer le contenu HTML du rapport avec TVA
+        const pdfContent = generatePDFContent();
+
+        // Simuler la génération PDF (dans une vraie application, utiliser jsPDF ou similaire)
+        const blob = new Blob([pdfContent], { type: 'text/html' });
+        const url = URL.createObjectURL(blob);
+
+        // Ouvrir dans une nouvelle fenêtre pour impression
+        const printWindow = window.open(url, '_blank');
+        printWindow.onload = function() {
+            printWindow.print();
+        };
+
+        showNotification('PDF généré avec succès (ouvert pour impression)', 'success');
+
+    } catch (error) {
+        console.error('Erreur génération PDF:', error);
+        showNotification('Erreur lors de la génération du PDF', 'error');
+    }
+}
+
+function generatePDFContent() {
+    const intervention = currentIntervention;
+    const questionnaireTVA = getQuestionnaireData();
+
+    return `
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <meta charset="UTF-8">
+        <title>Rapport d'intervention - ${intervention.intervention?.numero}</title>
+        <style>
+            body { font-family: Arial, sans-serif; margin: 20px; line-height: 1.4; }
+            .header { text-align: center; border-bottom: 2px solid #218085; padding-bottom: 10px; margin-bottom: 20px; }
+            .company-name { color: #218085; font-size: 24px; font-weight: bold; }
+            .section { margin-bottom: 20px; }
+            .section h3 { background: #f0f8ff; padding: 8px; border-left: 4px solid #218085; margin-bottom: 10px; }
+            .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 15px; }
+            .info-item { margin-bottom: 8px; }
+            .label { font-weight: bold; display: inline-block; width: 150px; }
+            .tva-section { border: 2px solid #A84B2F; background: #fff8f0; padding: 15px; margin: 20px 0; border-radius: 8px; }
+            .tva-title { color: #A84B2F; font-size: 18px; font-weight: bold; text-align: center; margin-bottom: 10px; }
+            .tva-text { font-style: italic; margin: 10px 0; padding: 10px; background: #f0f8ff; border-left: 4px solid #218085; }
+            .signature-section { margin-top: 30px; border: 1px solid #ccc; padding: 15px; }
+            @media print { body { margin: 0; } }
+        </style>
+    </head>
+    <body>
+        <div class="header">
+            <div class="company-name">SAC Sécurité</div>
+            <div>Automatismes de Portail</div>
+            <div>123 Avenue des Automatismes, 84200 Carpentras</div>
+            <div>Tél: 04 90 XX XX XX</div>
+        </div>
+
+        <h2 style="text-align: center; color: #218085;">RAPPORT D'INTERVENTION</h2>
+
+        <div class="section">
+            <h3>Informations Générales</h3>
+            <div class="info-grid">
+                <div>
+                    <div class="info-item"><span class="label">N° Intervention:</span> ${intervention.intervention?.numero || 'N/A'}</div>
+                    <div class="info-item"><span class="label">Date:</span> ${formatDate(new Date(intervention.intervention?.date || new Date()))}</div>
+                    <div class="info-item"><span class="label">Technicien:</span> ${intervention.intervention?.technicien || 'N/A'}</div>
+                </div>
+                <div>
+                    <div class="info-item"><span class="label">Client:</span> ${intervention.client?.nom || 'N/A'}</div>
+                    <div class="info-item"><span class="label">Adresse:</span> ${intervention.client?.adresse || 'N/A'}</div>
+                    <div class="info-item"><span class="label">Contact:</span> ${intervention.client?.telephone || 'N/A'}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Équipement</h3>
+            <div class="info-grid">
+                <div>
+                    <div class="info-item"><span class="label">Type:</span> ${intervention.equipement?.type || 'N/A'}</div>
+                    <div class="info-item"><span class="label">Matériau:</span> ${intervention.equipement?.materiau || 'N/A'}</div>
+                    <div class="info-item"><span class="label">Marque:</span> ${intervention.equipement?.marque || 'N/A'}</div>
+                </div>
+                <div>
+                    <div class="info-item"><span class="label">Modèle:</span> ${intervention.equipement?.modele || 'N/A'}</div>
+                    <div class="info-item"><span class="label">Année:</span> ${intervention.equipement?.annee || 'N/A'}</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h3>Intervention</h3>
+            <div class="info-item"><span class="label">Type:</span> ${intervention.intervention_details?.type || 'N/A'}</div>
+            <div class="info-item"><span class="label">Problème:</span> ${intervention.intervention_details?.probleme || 'N/A'}</div>
+            <div class="info-item"><span class="label">Actions:</span> ${intervention.intervention_details?.actions || 'N/A'}</div>
+            <div class="info-item"><span class="label">Pièces:</span> ${intervention.intervention_details?.pieces || 'N/A'}</div>
+            <div class="info-item"><span class="label">Durée:</span> ${intervention.intervention_details?.duree || 'N/A'} minutes</div>
+            <div class="info-item"><span class="label">Recommandations:</span> ${intervention.intervention_details?.recommandations || 'N/A'}</div>
+        </div>
+
+        <!-- SECTION TVA AJOUTÉE -->
+        <div class="tva-section">
+            <div class="tva-title">📋 ATTESTATION DE TVA 10%</div>
+            <p style="text-align: center; font-weight: bold;">Je soussigné</p>
+
+            <div class="tva-text">
+                demeurant à l'adresse "<strong>${intervention.client?.adresse || 'LIEU INTERVENTION'}</strong>" 
+                atteste que les travaux réalisés portent sur un immeuble depuis plus de 2 ans à la 
+                date de commencement des travaux et affecté exclusivement à l'habitation à l'issue 
+                de ces travaux.
+            </div>
+
+            <div style="margin-top: 15px;">
+                <div class="info-item"><span class="label">Type de logement:</span> 
+                    ${questionnaireTVA.typeLogement ? questionnaireTVA.typeLogement.charAt(0).toUpperCase() + questionnaireTVA.typeLogement.slice(1) : 'Non spécifié'}
+                </div>
+                <div class="info-item"><span class="label">Statut du client:</span> 
+                    ${questionnaireTVA.statutClient ? questionnaireTVA.statutClient.charAt(0).toUpperCase() + questionnaireTVA.statutClient.slice(1) : 'Non spécifié'}
+                    ${questionnaireTVA.statutClient === 'autre' && questionnaireTVA.statutAutreDetail ? ' (' + questionnaireTVA.statutAutreDetail + ')' : ''}
+                </div>
+            </div>
+        </div>
+
+        <div class="signature-section">
+            <h3>Signatures</h3>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px;">
+                <div>
+                    <div style="text-align: center; margin-bottom: 50px;">
+                        <strong>Signature du Technicien</strong>
+                    </div>
+                    <div style="border-top: 1px solid #ccc; text-align: center; padding-top: 5px;">
+                        ${intervention.intervention?.technicien || 'N/A'}
+                    </div>
+                </div>
+                <div>
+                    <div style="text-align: center; margin-bottom: 50px;">
+                        <strong>Signature du Client</strong><br>
+                        <small>(Certifie avoir reçu l'intervention et confirme l'attestation TVA)</small>
+                    </div>
+                    <div style="border-top: 1px solid #ccc; text-align: center; padding-top: 5px;">
+                        ${intervention.client?.nom || 'N/A'}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center; font-size: 12px; color: #666;">
+            Rapport généré le ${formatDate(new Date())} à ${formatTime(new Date())}
+        </div>
+    </body>
+    </html>
+    `;
+}
+
+// ================================
 // FONCTIONS UTILITAIRES MANQUANTES
 // ================================
 function getFieldValue(fieldId) {
@@ -2401,14 +2568,6 @@ function updateRapportStats() {
     if (signatureStatus) {
         signatureStatus.textContent = signatureData ? 'Signée' : 'Non signée';
     }
-}
-
-function generatePDF() {
-    showNotification('Génération du PDF en cours...', 'info');
-    // Fonction placeholder pour la génération PDF
-    setTimeout(() => {
-        showNotification('PDF généré avec succès', 'success');
-    }, 2000);
 }
 
 function loadParametres() {
