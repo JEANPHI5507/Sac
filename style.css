@@ -1518,6 +1518,441 @@ select.form-control {
     background: var(--color-secondary);
 }
 
+/* ================================ */
+/* AMÉLIORATIONS VISUELLES MODERNES */
+/* ================================ */
+
+/* Header avec gradient animé */
+.header {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover), var(--color-teal-800));
+    background-size: 200% 200%;
+    animation: gradientShift 8s ease infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grain" width="100" height="100" patternUnits="userSpaceOnUse"><circle cx="25" cy="25" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="75" cy="75" r="1" fill="rgba(255,255,255,0.1)"/><circle cx="50" cy="50" r="1" fill="rgba(255,255,255,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23grain)"/></svg>');
+    opacity: 0.3;
+    pointer-events: none;
+}
+
+@keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+}
+
+/* Cartes avec effets 3D */
+.card {
+    background: linear-gradient(145deg, var(--color-surface), rgba(var(--color-primary-rgb), 0.02));
+    border: 1px solid var(--color-card-border);
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.04),
+        0 2px 4px -1px rgba(0, 0, 0, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.card:hover::before {
+    left: 100%;
+}
+
+.card:hover {
+    transform: translateY(-4px) scale(1.02);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.1),
+        0 10px 10px -5px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Boutons avec effets avancés */
+.btn {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+    box-shadow:
+        0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2),
+        0 2px 4px -1px rgba(var(--color-primary-rgb), 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn:hover::before {
+    left: 100%;
+}
+
+.btn:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 10px 15px -3px rgba(var(--color-primary-rgb), 0.3),
+        0 4px 6px -2px rgba(var(--color-primary-rgb), 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow:
+        0 2px 4px -1px rgba(var(--color-primary-rgb), 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* Onglets avec effets de verre */
+.nav-tabs {
+    background: rgba(var(--color-surface-rgb), 0.8);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(var(--color-border-rgb), 0.2);
+    box-shadow:
+        0 8px 32px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.tab-btn.active {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-primary-hover));
+    box-shadow:
+        0 4px 6px -1px rgba(var(--color-primary-rgb), 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    position: relative;
+}
+
+.tab-btn.active::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--color-btn-primary-text), transparent);
+    border-radius: 2px;
+}
+
+/* Champs de formulaire avec effets modernes */
+.form-control {
+    background: linear-gradient(145deg, var(--color-surface), rgba(var(--color-primary-rgb), 0.01));
+    border: 2px solid var(--color-border);
+    box-shadow:
+        0 2px 4px -1px rgba(0, 0, 0, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.form-control:focus {
+    border-color: var(--color-primary);
+    box-shadow:
+        0 0 0 3px rgba(var(--color-primary-rgb), 0.1),
+        0 4px 6px -1px rgba(var(--color-primary-rgb), 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+/* Indicateur de sauvegarde amélioré */
+.save-indicator {
+    background: linear-gradient(135deg, var(--color-bg-3), rgba(var(--color-success-rgb), 0.1));
+    border: 1px solid rgba(var(--color-success-rgb), 0.2);
+    border-radius: var(--radius-full);
+    padding: var(--space-8) var(--space-16);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.1);
+}
+
+.save-dot {
+    background: linear-gradient(135deg, var(--color-success), var(--color-teal-600));
+    box-shadow: 0 0 0 3px rgba(var(--color-success-rgb), 0.3);
+}
+
+/* Photos avec effets avancés */
+.photo-item {
+    background: linear-gradient(145deg, var(--color-surface), rgba(var(--color-primary-rgb), 0.02));
+    border: 2px solid var(--color-card-border);
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.04),
+        0 2px 4px -1px rgba(0, 0, 0, 0.02),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.photo-item::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, rgba(var(--color-primary-rgb), 0), rgba(var(--color-primary-rgb), 0.1));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.photo-item:hover::before {
+    opacity: 1;
+}
+
+.photo-item:hover {
+    transform: translateY(-8px) scale(1.05);
+    box-shadow:
+        0 20px 25px -5px rgba(0, 0, 0, 0.15),
+        0 10px 10px -5px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.photo-item img {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.photo-item:hover img {
+    transform: scale(1.1);
+    filter: brightness(1.1) contrast(1.05);
+}
+
+/* Canvas de signature avec effets */
+#signature-canvas {
+    background: linear-gradient(145deg, var(--color-white), rgba(var(--color-gray-200-rgb), 0.3));
+    border: 3px solid var(--color-border);
+    box-shadow:
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+#signature-canvas:hover {
+    border-color: var(--color-primary);
+    box-shadow:
+        0 8px 12px -2px rgba(0, 0, 0, 0.15),
+        0 4px 6px -1px rgba(0, 0, 0, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+/* Questionnaire TVA avec effets spéciaux */
+.questionnaire-tva-section {
+    background: linear-gradient(135deg, var(--color-bg-2), rgba(var(--color-warning-rgb), 0.05));
+    border: 3px solid;
+    border-image: linear-gradient(135deg, var(--color-warning), var(--color-orange-500)) 1;
+    position: relative;
+    overflow: hidden;
+}
+
+.questionnaire-tva-section::before {
+    content: '📋';
+    position: absolute;
+    top: -15px;
+    left: 30px;
+    background: linear-gradient(135deg, var(--color-surface), rgba(var(--color-warning-rgb), 0.1));
+    padding: var(--space-8) var(--space-12);
+    border-radius: var(--radius-full);
+    font-size: var(--font-size-xl);
+    border: 3px solid;
+    border-image: linear-gradient(135deg, var(--color-warning), var(--color-orange-500)) 1;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    z-index: 2;
+}
+
+.questionnaire-tva-section::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="pattern" width="20" height="20" patternUnits="userSpaceOnUse"><circle cx="10" cy="10" r="1" fill="rgba(168,75,47,0.1)"/></pattern></defs><rect width="100" height="100" fill="url(%23pattern)"/></svg>');
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Cases à cocher avec animations */
+.checkbox-label {
+    background: linear-gradient(145deg, var(--color-surface), rgba(var(--color-primary-rgb), 0.01));
+    border: 2px solid var(--color-border);
+    box-shadow: 0 2px 4px -1px rgba(0, 0, 0, 0.02);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.checkbox-label::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(var(--color-primary-rgb), 0.1), transparent);
+    transition: left 0.5s;
+}
+
+.checkbox-label:hover::before {
+    left: 100%;
+}
+
+.checkbox-label:hover {
+    background: linear-gradient(145deg, var(--color-bg-1), rgba(var(--color-primary-rgb), 0.05));
+    border-color: var(--color-primary);
+    transform: translateX(6px) scale(1.02);
+    box-shadow: 0 8px 12px -2px rgba(0, 0, 0, 0.1);
+}
+
+.checkbox-label:has(input[type="checkbox"]:checked) {
+    background: linear-gradient(135deg, var(--color-bg-3), rgba(var(--color-success-rgb), 0.1));
+    border-color: var(--color-success);
+    color: var(--color-success);
+    font-weight: var(--font-weight-bold);
+    box-shadow:
+        0 4px 6px -1px rgba(var(--color-success-rgb), 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+.checkbox-label:has(input[type="checkbox"]:checked)::after {
+    content: '✓';
+    position: absolute;
+    right: var(--space-16);
+    color: var(--color-success);
+    font-size: var(--font-size-xl);
+    font-weight: var(--font-weight-bold);
+    animation: checkmark 0.3s ease-out;
+}
+
+@keyframes checkmark {
+    0% {
+        opacity: 0;
+        transform: scale(0.5) rotate(-45deg);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(-45deg);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1) rotate(0deg);
+    }
+}
+
+/* Modal avec effets de verre */
+.modal {
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.modal-content {
+    background: rgba(var(--color-surface-rgb), 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border: 1px solid rgba(var(--color-border-rgb), 0.2);
+    box-shadow:
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+/* Animations améliorées */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* Indicateurs de statut avec gradients */
+.status-badge.brouillon {
+    background: linear-gradient(135deg, rgba(var(--color-warning-rgb), 0.15), rgba(var(--color-orange-400-rgb), 0.1));
+    border: 1px solid rgba(var(--color-warning-rgb), 0.3);
+    box-shadow: 0 2px 4px -1px rgba(var(--color-warning-rgb), 0.1);
+}
+
+.status-badge.termine {
+    background: linear-gradient(135deg, rgba(var(--color-success-rgb), 0.15), rgba(var(--color-teal-300-rgb), 0.1));
+    border: 1px solid rgba(var(--color-success-rgb), 0.3);
+    box-shadow: 0 2px 4px -1px rgba(var(--color-success-rgb), 0.1);
+}
+
+/* Responsive améliorations */
+@media (max-width: 768px) {
+    .header {
+        background-size: 300% 300%;
+        animation-duration: 12s;
+    }
+
+    .card:hover {
+        transform: translateY(-2px) scale(1.01);
+    }
+
+    .btn:hover {
+        transform: translateY(-1px);
+    }
+
+    .photo-item:hover {
+        transform: translateY(-4px) scale(1.02);
+    }
+
+    .checkbox-label:hover {
+        transform: translateX(3px) scale(1.01);
+    }
+}
+
+/* Mode sombre améliorations */
+@media (prefers-color-scheme: dark) {
+    .header {
+        background: linear-gradient(135deg, var(--color-teal-600), var(--color-teal-700), var(--color-charcoal-800));
+    }
+
+    .card {
+        background: linear-gradient(145deg, var(--color-surface), rgba(var(--color-teal-300-rgb), 0.02));
+        border-color: rgba(var(--color-gray-400-rgb), 0.3);
+    }
+
+    .form-control {
+        background: linear-gradient(145deg, var(--color-surface), rgba(var(--color-gray-400-rgb), 0.01));
+        border-color: rgba(var(--color-gray-400-rgb), 0.4);
+    }
+
+    #signature-canvas {
+        background: linear-gradient(145deg, var(--color-charcoal-800), rgba(var(--color-gray-400-rgb), 0.1));
+    }
+}
+
 /* États vides */
 .empty-state {
     text-align: center;
