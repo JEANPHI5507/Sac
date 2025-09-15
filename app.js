@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Initialiser les event listeners
     initializeEventListeners();
+    initializeQuestionnaireListeners();
     
     console.log('✅ Application initialisée avec succès');
     showNotification('Application chargée avec succès', 'success');
@@ -627,6 +628,9 @@ function collectFormData() {
         };
     }
     
+    // Collecter les données TVA
+    currentIntervention.questionnaireTVA = getQuestionnaireData();
+
     // Mettre à jour l'historique pour l'auto-complétion
     updateHistoriqueFromForm();
 }
@@ -1357,36 +1361,42 @@ window.genererPDFIntervention = function(id) {
 function createPDFContent(doc) {
     // Page de garde
     createCoverPage(doc);
-    
+
     // Nouvelle page pour le contenu
     doc.addPage();
     let currentY = 30;
-    
+
     // En-tête
     addPageHeader(doc, 20);
-    
+
     // Sections
     currentY = addInformationsGenerales(doc, currentY);
     currentY = addEquipementSection(doc, currentY + 10);
-    
+
     // Nouvelle page pour intervention
     doc.addPage();
     addPageHeader(doc, 20);
     currentY = addInterventionSection(doc, 30);
-    
-    // Photos et signature si nécessaires
-    if (photos.length > 0 || signatureData) {
+
+    // Photos si présentes
+    if (photos.length > 0) {
         doc.addPage();
         addPageHeader(doc, 20);
         currentY = 30;
-        
-        if (photos.length > 0) {
-            currentY = addPhotosSection(doc, currentY);
-        }
-        
-        addSignatureSection(doc, currentY + 20);
+        currentY = addPhotosSection(doc, currentY);
     }
-    
+
+    // Nouvelle page pour attestation TVA et signature
+    doc.addPage();
+    addPageHeader(doc, 20);
+    currentY = 30;
+
+    // Attestation TVA
+    currentY = addTVASection(doc, currentY);
+
+    // Signature
+    addSignatureSection(doc, currentY + 20);
+
     // Pieds de page
     addPageFooters(doc);
 }
@@ -1569,21 +1579,96 @@ function addPhotosSection(doc, startY) {
     return currentY;
 }
 
+function addTVASection(doc, startY) {
+    let currentY = addSectionTitle(doc, 'ATTESTATION DE TVA 10%', startY);
+
+    // Collecter les données TVA
+    const tvaData = currentIntervention.questionnaireTVA || getQuestionnaireData();
+
+    // Texte de l'attestation
+    doc.setFontSize(11);
+    doc.setFont('helvetica', 'normal');
+    doc.setTextColor(19, 52, 59);
+
+    const attestationText = `Je soussigné ${currentIntervention.client?.nom || 'N/A'}, demeurant à l'adresse ${currentIntervention.client?.adresse || 'N/A'}, atteste que les travaux réalisés portent sur un immeuble depuis plus de 2 ans à la date de commencement des travaux et affecté exclusivement à l'habitation à l'issue de ces travaux.`;
+
+    const lines = doc.splitTextToSize(attestationText, 170);
+    doc.text(lines, 20, currentY);
+
+    currentY += lines.length * 5 + 15;
+
+    // Section des sélections
+    doc.setFontSize(12);
+    doc.setFont('helvetica', 'bold');
+    doc.text('Informations déclarées :', 20, currentY);
+    currentY += 10;
+
+    doc.setFontSize(10);
+    doc.setFont('helvetica', 'normal');
+
+    // Type de logement
+    if (tvaData.typeLogement) {
+        const typeLogementText = `Type de logement : ${tvaData.typeLogement === 'maison' ? 'Maison' : tvaData.typeLogement === 'immeuble' ? 'Immeuble' : 'Appartement individuel'}`;
+        doc.text(typeLogementText, 25, currentY);
+        currentY += 8;
+    }
+
+    // Statut du client
+    if (tvaData.statutClient) {
+        let statutText = `Statut du client : `;
+        if (tvaData.statutClient === 'proprietaire') {
+            statutText += 'Propriétaire';
+        } else if (tvaData.statutClient === 'locataire') {
+            statutText += 'Locataire';
+        } else if (tvaData.statutClient === 'autre') {
+            statutText += `Autre : ${tvaData.statutAutreDetail || 'Non précisé'}`;
+        }
+        doc.text(statutText, 25, currentY);
+        currentY += 8;
+    }
+
+    // Date et lieu
+    doc.text(`Fait à ${currentIntervention.client?.adresse?.split(',')[1]?.trim() || 'N/A'}`, 25, currentY);
+    currentY += 8;
+    doc.text(`Le ${formatDate(new Date())}`, 25, currentY);
+    currentY += 15;
+
+    // Cadre pour la signature
+    doc.setDrawColor(33, 128, 141);
+    doc.setLineWidth(1);
+    doc.rect(20, currentY, 170, 30);
+
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'italic');
+    doc.text('Signature du client certifiant l\'exactitude des informations ci-dessus', 25, currentY + 8);
+
+    // Ajouter la signature si elle existe
+    if (signatureData) {
+        try {
+            doc.addImage(signatureData, 'PNG', 130, currentY + 2, 50, 20);
+        } catch (error) {
+            console.warn('Erreur ajout signature TVA:', error);
+        }
+    }
+
+    return currentY + 35;
+}
+
 function addSignatureSection(doc, startY) {
     let currentY = addSectionTitle(doc, 'VALIDATION ET SIGNATURE', startY);
-    
+
     doc.setDrawColor(33, 128, 141);
     doc.setLineWidth(1);
     doc.rect(20, currentY, 170, 40);
-    
+
     doc.setFontSize(11);
     doc.setFont('helvetica', 'bold');
     doc.text('Signature du client:', 25, currentY + 10);
-    
+
     doc.setFont('helvetica', 'normal');
     doc.setFontSize(9);
     doc.text('Le client certifie avoir reçu l\'intervention.', 25, currentY + 20);
-    
+
     if (signatureData) {
         try {
             doc.addImage(signatureData, 'PNG', 130, currentY + 5, 50, 25);
@@ -1591,9 +1676,9 @@ function addSignatureSection(doc, startY) {
             console.warn('Erreur ajout signature:', error);
         }
     }
-    
+
     doc.text(`Date: ${formatDate(new Date())}`, 25, currentY + 35);
-    
+
     return currentY + 50;
 }
 
