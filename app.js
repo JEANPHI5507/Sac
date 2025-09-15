@@ -1628,7 +1628,8 @@ function addTVASection(doc, startY) {
     }
 
     // Date et lieu
-    doc.text(`Fait à ${currentIntervention.client?.adresse?.split(',')[1]?.trim() || 'N/A'}`, 25, currentY);
+    const lieuAttestation = tvaData.lieuAttestation || currentIntervention.client?.adresse?.split(',')[1]?.trim() || 'N/A';
+    doc.text(`Fait à ${lieuAttestation}`, 25, currentY);
     currentY += 8;
     doc.text(`Le ${formatDate(new Date())}`, 25, currentY);
     currentY += 15;
@@ -2132,7 +2133,7 @@ function initializeQuestionnaireListeners() {
     });
 
     // Ajouter les listeners pour la sauvegarde automatique
-    const questionnaireFields = document.querySelectorAll('input[name="type-logement"], input[name="statut-client"], #statut-autre-detail');
+    const questionnaireFields = document.querySelectorAll('input[name="type-logement"], input[name="statut-client"], #statut-autre-detail, #lieu-attestation');
     questionnaireFields.forEach(field => {
         field.addEventListener('change', onFieldChange);
         if (field.type === 'text') {
@@ -2147,11 +2148,13 @@ function getQuestionnaireData() {
     const typeLogement = document.querySelector('input[name="type-logement"]:checked')?.value || '';
     const statutClient = document.querySelector('input[name="statut-client"]:checked')?.value || '';
     const statutAutreDetail = document.getElementById('statut-autre-detail')?.value || '';
+    const lieuAttestation = document.getElementById('lieu-attestation')?.value || '';
 
     return {
         typeLogement,
         statutClient,
-        statutAutreDetail: statutClient === 'autre' ? statutAutreDetail : ''
+        statutAutreDetail: statutClient === 'autre' ? statutAutreDetail : '',
+        lieuAttestation
     };
 }
 
@@ -2182,6 +2185,12 @@ function setQuestionnaireData(data) {
                 }
             }
         }
+    }
+
+    // Remplir le lieu de l'attestation
+    if (data.lieuAttestation) {
+        const lieuField = document.getElementById('lieu-attestation');
+        if (lieuField) lieuField.value = data.lieuAttestation;
     }
 }
 
